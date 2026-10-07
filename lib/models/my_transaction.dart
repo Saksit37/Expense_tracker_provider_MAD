@@ -17,11 +17,11 @@ class MyTransaction {
 
   Map<String, dynamic> toMap() {
     return {
-      if (id != null) 'id': id, // ห้ามส่ง id ที่เป็น null เข้าไปใน UPDATE
+      if (id != null) 'id': id,
       'title': title,
       'amount': amount,
       'date': date.toIso8601String(),
-      'type': type.name, // เก็บเป็น 'income' หรือ 'expense'
+      'type': type.name,
     };
   }
 

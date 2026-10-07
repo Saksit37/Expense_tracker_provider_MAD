@@ -7,12 +7,15 @@ import '../models/my_transaction.dart';
 class TransactionProvider with ChangeNotifier {
   static const String _dbName = 'expenses.db';
   static const String _tableName = 'transactions';
+
   Database? _database;
   List<MyTransaction> _transactions = [];
-  TransactionProvider() {
-    fetchAndSetTransactions();
-  }
+
   List<MyTransaction> get transactions => [..._transactions];
+
+  TransactionProvider() {
+    fetchAndSetTransactions(); // โหลดข้อมูลเมื่อ Provider ถูกสร้าง
+  }
 
   // กระบวนการที่ 2: การสร้างฐานข้อมูล
   Future<void> _initDatabase() async {
@@ -20,6 +23,7 @@ class TransactionProvider with ChangeNotifier {
     try {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, _dbName);
+
       _database = await openDatabase(
         path,
         version: 1,
@@ -36,6 +40,7 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+  // กระบวนการที่ 3: การ Insert
   Future<void> addTransaction(
     String title,
     double amount,
@@ -54,9 +59,10 @@ class TransactionProvider with ChangeNotifier {
 
     final id = await _database!.insert(_tableName, newTransaction.toMap());
     print('Inserted transaction with id: $id');
-    // await fetchAndSetTransactions(); // เปิดบรรทัดนี้ในกระบวนการที่ 4
+    await fetchAndSetTransactions();
   }
 
+  // กระบวนการที่ 4: การ Read
   Future<void> fetchAndSetTransactions() async {
     await _initDatabase();
     if (_database == null) return;
@@ -69,9 +75,11 @@ class TransactionProvider with ChangeNotifier {
     notifyListeners(); // แจ้ง UI ให้วาดใหม่
   }
 
+  // กระบวนการที่ 5: การ Update
   Future<void> updateTransaction(int id, MyTransaction newTransaction) async {
     await _initDatabase();
     if (_database == null) return;
+
     await _database!.update(
       _tableName,
       newTransaction
@@ -86,6 +94,7 @@ class TransactionProvider with ChangeNotifier {
   Future<void> deleteTransaction(int id) async {
     await _initDatabase();
     if (_database == null) return;
+
     await _database!.delete(_tableName, where: 'id = ?', whereArgs: [id]);
     await fetchAndSetTransactions();
   }

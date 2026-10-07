@@ -15,11 +15,12 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Expense Tracker',
-      home: TransactionListScreen(), // เปลี่ยนเป็นหน้าจอหลัก
+      home: TransactionListScreen(),
     );
   }
 }
