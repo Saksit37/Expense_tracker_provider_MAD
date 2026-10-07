@@ -4,11 +4,9 @@ import 'package:intl/intl.dart';
 
 import '../providers/transaction_provider.dart';
 import '../models/my_transaction.dart';
-import 'add_edit_transaction_screen.dart';
 
 class TransactionListScreen extends StatelessWidget {
   const TransactionListScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,16 +19,6 @@ class TransactionListScreen extends StatelessWidget {
                 itemBuilder: (ctx, i) {
                   final tx = txProvider.transactions[i];
                   return ListTile(
-                    // แตะที่รายการเพื่อเปิดหน้าแก้ไข
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              AddEditTransactionScreen(transaction: tx),
-                        ),
-                      );
-                    },
                     leading: CircleAvatar(
                       child: Text(
                         tx.type == TransactionType.income ? 'รับ' : 'จ่าย',
@@ -63,14 +51,14 @@ class TransactionListScreen extends StatelessWidget {
                 },
               ),
       ),
-      // ปุ่ม + ไปหน้าฟอร์มเพิ่มรายการ
+      // ปุ่มเพิ่มรายการตัวอย่างชั่วคราว จนกว่าจะสร้างหน้าฟอร์มในการบ้าน
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const AddEditTransactionScreen()),
-          );
-        },
+        onPressed: () => context.read<TransactionProvider>().addTransaction(
+          'ค่าอาหาร',
+          120.0,
+          DateTime.now(),
+          TransactionType.expense,
+        ),
         child: const Icon(Icons.add),
       ),
     );
